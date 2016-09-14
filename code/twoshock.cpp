@@ -362,7 +362,7 @@ int main()
 
 	float CFL = 0.8;
 	float t = 0.0; 
-	float tEnd = 0.8;
+	float tEnd = 1.8;
 	int nSteps = 0; 
 	float dt;
 
@@ -386,7 +386,7 @@ int main()
 		update(U,Flux,dt,dx,NCells);
 		cout<< "t" << t << endl; 
 		
-		if (stepcount%50 == 0)
+		if (stepcount%10 == 0)
 		{
 			ofstream WriteW ;
 			WriteW.open("premetive.csv");
@@ -396,7 +396,7 @@ int main()
 				U2W(U[i],W[i]);
 				WriteW << dx*i << "," << W[i][0] << "," << W[i][1] <<","<< W[i][2] <<","<< W[i][3] <<","<< W[i][4] << endl ;
 			}
-			pause(3);
+			pause(1.5);
 		}
 		
 	

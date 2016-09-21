@@ -225,7 +225,12 @@ void update(vector<vector<float> > & U, vector<vector<float> > & Flux, float dt,
 	// Updating Phi 
 	for (int i = 1; i < NCells-2; ++i)
 	{
-		U[i][3] = (Rho[i]*Phi[i]+(dt/dx)*((RhoU[i+1]*Phi[i+1])-(RhoU[i]*Phi[i])))/(U[i][0]);
+		// U[i][3] = (Rho[i]*Phi[i]+(dt/dx)*((RhoU[i+1]*Phi[i+1])-(RhoU[i]*Phi[i])))/(U[i][0]);
+		if (/* condition */)
+		{
+			/* code */
+		}
+		U[i][3] = 
 	}
 
 	// Updating Gamma

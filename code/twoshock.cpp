@@ -336,17 +336,17 @@ void TestCase(vector<vector<float> > & U)
 
 	for (int i = 0; i < NCells; ++i)
 	{
-		if(i==0 || i==1)
+		if(i<NCells/4)
 		{
 			W2U(WL0,U[i]);
 		}
-		else if(i==NCells-1 || i==NCells-2)
+		else if(i>=NCells/4 && i<3*NCells/4)
 		{
-			W2U(WR0,U[i]);
+			W2U(WM0,U[i]);
 		}
 		else
 		{
-			W2U(WM0,U[i]);
+			W2U(WR0,U[i]);
 		}
 	}
 }
@@ -357,12 +357,12 @@ int main()
 	time(&start); // noteing the starting time
 
 	//INPUTS = 1.4 ;
-	int NCells = 500;
-	float dx = 500.0/NCells;
+	int NCells = 10000;
+	float dx = 5000.0/NCells;
 
 	float CFL = 0.8;
 	float t = 0.0; 
-	float tEnd = 1.8;
+	float tEnd = 3.8;
 	int nSteps = 0; 
 	float dt;
 
@@ -377,6 +377,7 @@ int main()
 	TestCase(U); // setting the initial values
 	
 	// Solver
+	int framcout = 0;
 	int stepcount = 0;
 	while(t<tEnd)
 	{
@@ -386,8 +387,10 @@ int main()
 		update(U,Flux,dt,dx,NCells);
 		cout<< "t" << t << endl; 
 		
-		if (stepcount%10 == 0)
+		if (stepcount%100 == 0)
 		{
+			framcout ++;
+			cout<< framcout << endl;
 			ofstream WriteW ;
 			WriteW.open("premetive.csv");
 			// WriteW << "x" << "," << "rho" << "," << "u" << ","<< "e" << "," << "psi" << endl ;
@@ -396,7 +399,7 @@ int main()
 				U2W(U[i],W[i]);
 				WriteW << dx*i << "," << W[i][0] << "," << W[i][1] <<","<< W[i][2] <<","<< W[i][3] <<","<< W[i][4] << endl ;
 			}
-			pause(1.5);
+			pause(1);
 		}
 		
 	

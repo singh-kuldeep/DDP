@@ -270,7 +270,7 @@ void TestCase(vector<vector<float> > & U)
 	std::vector<float> WR0(5);
 
 	// Case 1 : Simple moving 1D Shock, IVP 
-	// Left initial values
+	// Left (4) initial values
 	WL0[0] = 1. ; // rho
 	WL0[1] = 0. ; // u
 	WL0[2] = 100000.0 ; // p
@@ -278,10 +278,10 @@ void TestCase(vector<vector<float> > & U)
 	WL0[4] = 1.4 ; // gamma
 
 
-	// Right initial values
+	// Right(1) initial values
 	WR0[0] = 0.125 ; 
 	WR0[1] = 0. ; 
-	WR0[2] = 10000.0 ; 
+	WR0[2] = WL0[2]/10. ; 
 	WR0[3] = -1. ; 
 	WR0[4] = 1.4 ;
 
@@ -336,7 +336,7 @@ int main()
 {
 	//INPUTS = 1.4 ;
 	int NCells = 1000;
-	float dx = 500.0/NCells;
+	float dx = 500.0/NCells; // change the dx in the matalb file too
 
 	float CFL = 0.8;
 	float time = 0.0; 
@@ -354,9 +354,28 @@ int main()
 
 	TestCase(U); // setting the initial values
 	
+	std::vector<float> WL(5);
+	std::vector<float> WR(5);
+
+	U2W(U[1],WL);
+	U2W(U[NCells-2],WR);
+
+	ofstream extrainfo ;
+	extrainfo.open("extra.csv");
+	extrainfo<<dx<<","<<tEnd<<","<<WL[0]<<","<<WL[1]<<","<<WL[2]<<","<<WR[0]<<","<<WR[1]<<","<<WR[2]<<endl;
+
 	// Solver
 	while(time<tEnd)
 	{
+		for (int i = 0; i < NCells; ++i)
+		{
+			//check whether there are NaN 
+			if (isnan(U[i][0]) == 1)
+			{
+				cout << "Can not Compute" << endl;
+				return 0;
+			}
+		}
 		dt = getTimeStep(CFL,dx,NCells,U);
 		time = time+dt;
 		update(U,Flux,dt,dx,NCells);
@@ -380,5 +399,7 @@ int main()
 	{
 		WriteW << dx*i << "," << W[i][0] << "," << W[i][1] <<","<< W[i][2] <<","<< W[i][3] <<","<< W[i][4] << endl ;
 	}
+
+
 	return 0;
 }
